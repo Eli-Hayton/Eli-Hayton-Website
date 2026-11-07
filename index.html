@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0a394e" />
+  <meta name="description" content="Sail around Eli Hayton's interactive 3D portfolio, and explore games, software, work experience, skills, and certifications." />
+  <title>Eli Hayton | The Creative Archipelago</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght,SOFT,WONK@9..144,600,50,1;9..144,700,50,1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <div id="world" aria-label="3D ocean with a sailing ship and interactive portfolio islands"></div>
+    <div class="paper-grain" aria-hidden="true"></div>
+    <div class="ambient-glow" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <button class="brand" id="homeButton" aria-label="Return to starting harbor">
+        <span class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none"><path d="M20 4v24M20 7 8 26h12V7ZM23 12l10 15H23V12Z" fill="#ffdd9a"/><path d="m7 29 13 5 13-5-3.5 6H11L7 29Z" fill="#fff" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="brand-copy"><strong>ELI HAYTON</strong><small>THE LITTLE ATLAS</small></span>
+      </button>
+      <div class="header-center"><span class="pulse-dot"></span> Five stops. A few years of making things. <span class="slash">/</span> 2026</div>
+      <button class="about-button" id="aboutButton">About me <span aria-hidden="true">↗</span></button>
+    </header>
+
+    <main>
+      <section class="sidebar" aria-label="Portfolio introduction and destinations">
+        <div class="hero-kicker"><span class="sun-symbol">✳</span> WELCOME ABOARD</div>
+        <h1>A little <em>map</em><br />of what<br />I make<span class="heading-period">.</span></h1>
+        <p class="intro" id="introText"></p>
+        <div class="separator"><span>FIVE PLACES TO VISIT</span><span class="separator-line"></span><span>↘</span></div>
+        <nav id="destinationList" class="destination-list" aria-label="Sail to a portfolio island"></nav>
+        <div class="sidebar-bottom">
+          <span class="anchor-icon" aria-hidden="true">⚓</span>
+          <span><strong>Take the scenic route.</strong><small>Choose a stop, or just sail around.</small></span>
+        </div>
+      </section>
+
+      <div class="world-labels" id="worldLabels" aria-label="Clickable island names"></div>
+
+      <div class="top-map-tag" id="seaTag"><span class="sea-wave-icon">〰</span> THE OPEN SEA <span class="top-map-location" id="seaStatus">FREE TO EXPLORE</span></div>
+
+      <div class="sea-controls" aria-label="Boat controls">
+        <div class="direction-cross" aria-hidden="true"><span>N</span><span>✦</span></div>
+        <div><strong>AT THE HELM</strong><small><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> to steer · click a destination to auto-sail</small></div>
+      </div>
+
+      <div class="bottom-right-controls">
+        <button class="control-button" id="zoomOut" aria-label="Zoom out" title="Zoom out">−</button>
+        <button class="control-button" id="zoomIn" aria-label="Zoom in" title="Zoom in">+</button>
+        <button class="control-button control-map" id="resetCamera" aria-label="Reset camera" title="Reset camera">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2 6l6-3 8 3 6-3v15l-6 3-8-3-6 3V6Z"/><path d="M8 3v15M16 6v15"/></svg>
+        </button>
+      </div>
+
+      <div class="touch-pad" aria-label="Mobile steering controls">
+        <button class="touch-key touch-up" data-steer="forward" aria-label="Sail forward">▲</button>
+        <button class="touch-key touch-left" data-steer="left" aria-label="Turn left">◀</button>
+        <button class="touch-key touch-down" data-steer="back" aria-label="Sail backward">▼</button>
+        <button class="touch-key touch-right" data-steer="right" aria-label="Turn right">▶</button>
+      </div>
+
+      <aside id="islandPanel" class="island-panel" role="dialog" aria-modal="false" aria-labelledby="panelTitle" aria-hidden="true" inert>
+        <div class="panel-topline"><span id="panelNumeral">ISLAND 01 / 05</span><button id="closePanel" class="close-button" aria-label="Close island details">×</button></div>
+        <div class="panel-scroll">
+          <span id="panelTag" class="panel-tag">GAME DEVELOPMENT</span>
+          <h2 id="panelTitle">Game Dev Cove</h2>
+          <p class="panel-subtitle" id="panelSubtitle"></p>
+          <p class="panel-summary" id="panelSummary"></p>
+          <div class="panel-divider"><span>DISCOVERIES</span><span class="line"></span><span id="itemCount"></span></div>
+          <div class="project-list" id="projectList"></div>
+          <div class="panel-footer"><span>✦</span> End of this page of the atlas.</div>
+        </div>
+        <button class="next-island" id="nextIsland"><span>NEXT DESTINATION</span><strong id="nextIslandName"></strong><span aria-hidden="true">↗</span></button>
+      </aside>
+
+      <div class="about-overlay" id="aboutOverlay" aria-hidden="true" inert>
+        <div class="about-backdrop" id="aboutBackdrop"></div>
+        <section class="about-card" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+          <button class="about-close" id="aboutClose" aria-label="Close about section">×</button>
+          <span class="about-eyebrow">ABOUT THE PERSON BEHIND THE BOAT</span>
+          <div class="avatar-illustration" aria-hidden="true"><span>⛵</span><i>✦</i></div>
+          <h2 id="aboutTitle">Hey, I'm <em>Eli!</em></h2>
+          <p>I study computer science, build games and small tools, and work in game QA. Away from my computer, I have managed lifeguard teams and taught swimming and lifeguarding skills. I made this little sea map because clicking through a list of projects sounded less fun than sailing between them.</p>
+          <div class="about-pill-row"><span>🎮 Game systems</span><span>⚓ Lifeguard leadership</span><span>💻 Creative coding</span></div>
+          <p class="about-note" id="aboutNote"></p>
+          <div class="contact-links" id="contactLinks"></div>
+          <button class="about-dismiss" id="aboutDismiss">Back to the ocean <span>↗</span></button>
+        </section>
+      </div>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      <div class="loading-cover" id="loadingCover"><div class="loading-sail">⛵</div><span>CHARTING THE ISLANDS</span><div class="loading-bar"><i></i></div></div>
+    </main>
+  </div>
+  <script type="module" src="./fallback.js"></script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
